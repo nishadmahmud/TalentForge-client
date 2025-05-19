@@ -1,11 +1,13 @@
 import { Link, useLocation } from "react-router";
 import { useContext, useState } from "react";
 import { AuthContext } from "../auth/AuthProvider";
-import { FaUser, FaBars } from "react-icons/fa";
+import { FaUser, FaBars, FaTimes, FaChevronDown } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Navbar = () => {
   const { user, logOut } = useContext(AuthContext);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   const location = useLocation();
 
   const handleLogOut = () => {
@@ -18,30 +20,44 @@ const Navbar = () => {
     { to: "/", label: "Home" },
     { to: "/browse-tasks", label: "Browse Tasks" },
     { to: "/add-task", label: "Add Task" },
-    { to: "/my-tasks", label: "My Posted Tasks" },
+    { to: "/my-tasks", label: "My Tasks" },
   ];
 
   return (
-    <nav className="bg-white shadow-md sticky top-0 z-50">
+    <nav className="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-slate-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div className="flex items-center">
-            <Link to="/" className="text-2xl font-bold text-blue-600 tracking-tight">
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="flex items-center"
+          >
+            <Link 
+              to="/" 
+              className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent tracking-tight"
+            >
               TalentForge
             </Link>
-          </div>
+          </motion.div>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex md:items-center md:space-x-2 lg:space-x-6">
+          <div className="hidden md:flex md:items-center md:space-x-1">
             {navLinks.map((link) => (
               <Link
                 key={link.to}
                 to={link.to}
-                className={`px-3 py-2 rounded-md text-base font-medium transition-colors duration-200
-                  ${location.pathname === link.to ? "text-blue-600 font-semibold" : "text-gray-700 hover:text-blue-500"}`}
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 relative
+                  ${location.pathname === link.to ? "text-emerald-600" : "text-slate-700 hover:text-emerald-600"}`}
               >
                 {link.label}
+                {location.pathname === link.to && (
+                  <motion.div 
+                    layoutId="navUnderline"
+                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-500"
+                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                  />
+                )}
               </Link>
             ))}
           </div>
@@ -49,9 +65,12 @@ const Navbar = () => {
           {/* User/Buttons */}
           <div className="flex items-center space-x-2">
             {user ? (
-              <div className="relative group">
-                <button className="flex items-center space-x-2 focus:outline-none">
-                  <div className="w-9 h-9 rounded-full overflow-hidden border border-gray-300">
+              <div className="relative">
+                <button 
+                  className="flex items-center space-x-1 focus:outline-none group"
+                  onClick={() => setProfileOpen(!profileOpen)}
+                >
+                  <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-emerald-100 shadow-sm group-hover:border-emerald-200 transition-colors">
                     {user.photoURL ? (
                       <img
                         src={user.photoURL}
@@ -59,81 +78,127 @@ const Navbar = () => {
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <FaUser className="w-full h-full p-2 text-gray-600" />
+                      <div className="w-full h-full bg-emerald-50 flex items-center justify-center">
+                        <FaUser className="text-emerald-600" />
+                      </div>
                     )}
                   </div>
+                  <FaChevronDown className={`text-slate-500 text-xs transition-transform ${profileOpen ? 'rotate-180' : ''}`} />
                 </button>
-                <div className="absolute right-0 mt-2 w-44 bg-white rounded-md shadow-lg py-2 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-200 z-50">
-                  <div className="px-4 py-2 text-sm text-gray-700 font-semibold border-b">{user.displayName}</div>
-                  <button
-                    onClick={handleLogOut}
-                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Logout
-                  </button>
-                </div>
+
+                <AnimatePresence>
+                  {profileOpen && (
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg py-2 z-50 border border-slate-100"
+                      onClick={() => setProfileOpen(false)}
+                    >
+                      <div className="px-4 py-3 border-b border-slate-100">
+                        <p className="text-sm font-medium text-slate-900">{user.displayName}</p>
+                        <p className="text-xs text-slate-500 truncate">{user.email}</p>
+                      </div>
+                      <Link
+                        to="/profile"
+                        className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+                      >
+                        Your Profile
+                      </Link>
+                      <Link
+                        to="/settings"
+                        className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+                      >
+                        Settings
+                      </Link>
+                      <button
+                        onClick={handleLogOut}
+                        className="block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 rounded-b-xl transition-colors"
+                      >
+                        Sign out
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             ) : (
-              <>
+              <div className="hidden md:flex items-center space-x-3">
                 <Link
                   to="/login"
-                  className="inline-flex items-center px-5 py-2 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors"
+                  className="px-4 py-2 text-sm font-medium text-emerald-600 hover:text-emerald-700 transition-colors"
                 >
-                  Login
+                  Sign in
                 </Link>
                 <Link
                   to="/register"
-                  className="inline-flex items-center px-5 py-2 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-100 transition-colors"
+                  className="px-4 py-2 text-sm font-medium rounded-lg text-white bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 shadow-sm transition-all"
                 >
-                  Register
+                  Get started
                 </Link>
-              </>
+              </div>
             )}
-            {/* Hamburger for mobile */}
+            
+            {/* Mobile menu button */}
             <button
-              className="md:hidden ml-2 p-2 rounded hover:bg-gray-100 focus:outline-none"
+              className="md:hidden ml-2 p-2 rounded-md hover:bg-slate-100 focus:outline-none transition-colors"
               onClick={() => setMenuOpen(!menuOpen)}
               aria-label="Toggle menu"
             >
-              <FaBars className="h-6 w-6 text-gray-700" />
+              {menuOpen ? (
+                <FaTimes className="h-5 w-5 text-slate-700" />
+              ) : (
+                <FaBars className="h-5 w-5 text-slate-700" />
+              )}
             </button>
           </div>
         </div>
-        {/* Mobile Menu */}
-        {menuOpen && (
-          <div className="md:hidden mt-2 pb-4 flex flex-col space-y-2 animate-fade-in">
-            {navLinks.map((link) => (
-              <Link
-                key={link.to}
-                to={link.to}
-                className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200
-                  ${location.pathname === link.to ? "text-blue-600 font-semibold" : "text-gray-700 hover:text-blue-500"}`}
-                onClick={() => setMenuOpen(false)}
-              >
-                {link.label}
-              </Link>
-            ))}
-            {!user && (
-              <>
-                <Link
-                  to="/login"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  Login
-                </Link>
-                <Link
-                  to="/register"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-100 transition-colors"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  Register
-                </Link>
-              </>
-            )}
-          </div>
-        )}
       </div>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+            className="md:hidden overflow-hidden bg-white shadow-lg"
+          >
+            <div className="px-4 pt-2 pb-4 space-y-1">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  className={`block px-3 py-2 rounded-md text-base font-medium transition-colors
+                    ${location.pathname === link.to ? 'bg-emerald-50 text-emerald-600' : 'text-slate-700 hover:bg-slate-50'}`}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              ))}
+              {!user && (
+                <div className="pt-2 border-t border-slate-100">
+                  <Link
+                    to="/login"
+                    className="block w-full px-4 py-2 text-center text-base font-medium text-emerald-600 hover:bg-emerald-50 rounded-md transition-colors"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Sign in
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="block w-full px-4 py-2 mt-2 text-center text-base font-medium text-white bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 rounded-md shadow-sm transition-all"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Get started
+                  </Link>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 };

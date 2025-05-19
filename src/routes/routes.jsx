@@ -7,6 +7,8 @@ import PostedTask from "../pages/PostedTask";
 import NotFound from "../pages/NotFound";
 import BrowseTask from "../pages/BrowseTask";
 import PrivateRoute from "../components/PrivateRoute";
+import Login from "../pages/Login";
+import Register from "../pages/Register";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +22,14 @@ const router = createBrowserRouter([
       {
         path: "browse-tasks",
         Component: BrowseTask,
+      },
+      {
+        path: "login",
+        Component: Login,
+      },
+      {
+        path: "register",
+        Component: Register,
       },
       {
         path: "profile",
@@ -38,7 +48,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "posted-task",
+        path: "my-tasks",
         element: (
           <PrivateRoute>
             <PostedTask></PostedTask>
