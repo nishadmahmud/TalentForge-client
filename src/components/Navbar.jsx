@@ -1,13 +1,12 @@
 import { Link, useLocation } from "react-router";
 import { useContext, useState } from "react";
 import { AuthContext } from "../auth/AuthProvider";
-import { FaUser, FaBars, FaTimes, FaChevronDown } from "react-icons/fa";
+import { FaUser, FaBars, FaTimes, FaSignOutAlt } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 
 const Navbar = () => {
   const { user, logOut } = useContext(AuthContext);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [profileOpen, setProfileOpen] = useState(false);
   const location = useLocation();
 
   const handleLogOut = () => {
@@ -28,13 +27,13 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center"
           >
-            <Link 
-              to="/" 
+            <Link
+              to="/"
               className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent tracking-tight"
             >
               TalentForge
@@ -48,11 +47,15 @@ const Navbar = () => {
                 key={link.to}
                 to={link.to}
                 className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 relative
-                  ${location.pathname === link.to ? "text-emerald-600" : "text-slate-700 hover:text-emerald-600"}`}
+                  ${
+                    location.pathname === link.to
+                      ? "text-emerald-600"
+                      : "text-slate-700 hover:text-emerald-600"
+                  }`}
               >
                 {link.label}
                 {location.pathname === link.to && (
-                  <motion.div 
+                  <motion.div
                     layoutId="navUnderline"
                     className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-500"
                     transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
@@ -63,18 +66,16 @@ const Navbar = () => {
           </div>
 
           {/* User/Buttons */}
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-4">
             {user ? (
-              <div className="relative">
-                <button 
-                  className="flex items-center space-x-1 focus:outline-none group"
-                  onClick={() => setProfileOpen(!profileOpen)}
-                >
-                  <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-emerald-100 shadow-sm group-hover:border-emerald-200 transition-colors">
-                    {user.photoURL ? (
+              <div className="flex items-center space-x-3">
+
+                <Link to="/profile" className="focus:outline-none">
+                  <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-emerald-100 shadow-sm hover:border-emerald-200 transition-colors">
+                    {user && user.photoURL ? (
                       <img
                         src={user.photoURL}
-                        alt={user.displayName}
+                        alt={user.displayName || 'User'}
                         className="w-full h-full object-cover"
                       />
                     ) : (
@@ -83,44 +84,16 @@ const Navbar = () => {
                       </div>
                     )}
                   </div>
-                  <FaChevronDown className={`text-slate-500 text-xs transition-transform ${profileOpen ? 'rotate-180' : ''}`} />
-                </button>
+                </Link>
 
-                <AnimatePresence>
-                  {profileOpen && (
-                    <motion.div 
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 10 }}
-                      transition={{ duration: 0.2 }}
-                      className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg py-2 z-50 border border-slate-100"
-                      onClick={() => setProfileOpen(false)}
-                    >
-                      <div className="px-4 py-3 border-b border-slate-100">
-                        <p className="text-sm font-medium text-slate-900">{user.displayName}</p>
-                        <p className="text-xs text-slate-500 truncate">{user.email}</p>
-                      </div>
-                      <Link
-                        to="/profile"
-                        className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
-                      >
-                        Your Profile
-                      </Link>
-                      <Link
-                        to="/settings"
-                        className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
-                      >
-                        Settings
-                      </Link>
-                      <button
-                        onClick={handleLogOut}
-                        className="block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 rounded-b-xl transition-colors"
-                      >
-                        Sign out
-                      </button>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                <button
+                  onClick={handleLogOut}
+                  className="hidden md:flex items-center space-x-1 px-3 py-1 text-sm font-medium text-slate-700 hover:text-red-600 transition-colors"
+                  title="Sign out"
+                >
+                  <FaSignOutAlt className="text-base" />
+                  <span>Sign out</span>
+                </button>
               </div>
             ) : (
               <div className="hidden md:flex items-center space-x-3">
@@ -138,7 +111,7 @@ const Navbar = () => {
                 </Link>
               </div>
             )}
-            
+
             {/* Mobile menu button */}
             <button
               className="md:hidden ml-2 p-2 rounded-md hover:bg-slate-100 focus:outline-none transition-colors"
@@ -158,9 +131,9 @@ const Navbar = () => {
       {/* Mobile Menu */}
       <AnimatePresence>
         {menuOpen && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
+            animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2 }}
             className="md:hidden overflow-hidden bg-white shadow-lg"
@@ -171,13 +144,36 @@ const Navbar = () => {
                   key={link.to}
                   to={link.to}
                   className={`block px-3 py-2 rounded-md text-base font-medium transition-colors
-                    ${location.pathname === link.to ? 'bg-emerald-50 text-emerald-600' : 'text-slate-700 hover:bg-slate-50'}`}
+                    ${
+                      location.pathname === link.to
+                        ? "bg-emerald-50 text-emerald-600"
+                        : "text-slate-700 hover:bg-slate-50"
+                    }`}
                   onClick={() => setMenuOpen(false)}
                 >
                   {link.label}
                 </Link>
               ))}
-              {!user && (
+              {user ? (
+                <>
+                  <Link
+                    to="/profile"
+                    className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Your Profile
+                  </Link>
+                  <button
+                    onClick={() => {
+                      handleLogOut();
+                      setMenuOpen(false);
+                    }}
+                    className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 hover:bg-red-50 transition-colors"
+                  >
+                    Sign out
+                  </button>
+                </>
+              ) : (
                 <div className="pt-2 border-t border-slate-100">
                   <Link
                     to="/login"
