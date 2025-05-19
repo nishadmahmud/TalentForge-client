@@ -6,6 +6,7 @@ import AddTask from "../pages/AddTask";
 import PostedTask from "../pages/PostedTask";
 import NotFound from "../pages/NotFound";
 import BrowseTask from "../pages/BrowseTask";
+import PrivateRoute from "../components/PrivateRoute";
 
 const router = createBrowserRouter([
   {
