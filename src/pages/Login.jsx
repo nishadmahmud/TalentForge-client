@@ -4,7 +4,7 @@ import { AuthContext } from "../auth/AuthProvider";
 import { motion } from "framer-motion";
 
 const Login = () => {
-  const { signIn, signInWithGoogle } = useContext(AuthContext);
+  const { signIn, googleSignIn } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -19,6 +19,7 @@ const Login = () => {
     setIsLoading(true);
     try {
       await signIn(email, password);
+      setIsLoading(false);
       navigate(from, { replace: true });
     } catch (err) {
       setError(err.message);
@@ -30,7 +31,8 @@ const Login = () => {
     setError("");
     setIsLoading(true);
     try {
-      await signInWithGoogle();
+      await googleSignIn();
+      setIsLoading(false);
       navigate(from, { replace: true });
     } catch (err) {
       setError(err.message);

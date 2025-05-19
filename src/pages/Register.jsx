@@ -19,7 +19,7 @@ const passwordChecks = [
 ];
 
 const Register = () => {
-  const { signUp, signInWithGoogle } = useContext(AuthContext);
+  const { createUser, googleSignIn, updateUserProfile } = useContext(AuthContext);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [photoURL, setPhotoURL] = useState("");
@@ -40,7 +40,9 @@ const Register = () => {
       return;
     }
     try {
-      await signUp(email, password, name, photoURL);
+      const result = await createUser(email, password);
+      await updateUserProfile(name, photoURL);
+      setIsLoading(false);
       navigate("/", { replace: true });
     } catch (err) {
       setError(err.message);
@@ -52,7 +54,8 @@ const Register = () => {
     setError("");
     setIsLoading(true);
     try {
-      await signInWithGoogle();
+      await googleSignIn();
+      setIsLoading(false);
       navigate("/", { replace: true });
     } catch (err) {
       setError(err.message);
