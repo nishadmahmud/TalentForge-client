@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../auth/AuthProvider';
 import toast from 'react-hot-toast';
+import Swal from 'sweetalert2';
 
 const PostedTask = () => {
     const { user } = useContext(AuthContext);
@@ -34,8 +35,45 @@ const PostedTask = () => {
     const handleUpdate = (task) => {
         toast('Update feature coming soon!');
     };
-    const handleDelete = (taskId) => {
-        toast('Delete feature coming soon!');
+    const handleDelete = async (taskId) => {
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: 'You will not be able to recover this task!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#10B981',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        });
+        if (!result.isConfirmed) return;
+        try {
+            const res = await fetch(`http://localhost:3000/tasks/${taskId}`, {
+                method: 'DELETE',
+            });
+            const data = await res.json();
+            if (data.success) {
+                setTasks(prevTasks => prevTasks.filter(task => task._id !== taskId));
+                toast.success('Task deleted successfully!', {
+                    duration: 4000,
+                    position: 'top-center',
+                    style: {
+                        background: '#10B981',
+                        color: '#fff',
+                    },
+                });
+            } else {
+                throw new Error(data.message || 'Failed to delete task.');
+            }
+        } catch (error) {
+            toast.error(error.message || 'Failed to delete task.', {
+                duration: 4000,
+                position: 'top-center',
+                style: {
+                    background: '#EF4444',
+                    color: '#fff',
+                },
+            });
+        }
     };
     const handleBids = (taskId) => {
         toast('Bids feature coming soon!');
