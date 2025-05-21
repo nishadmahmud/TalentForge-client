@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router';
+import { FaCode, FaMobileAlt, FaPaintBrush, FaPenNib, FaBullhorn, FaChartBar, FaThLarge } from 'react-icons/fa';
 
 const slides = [
   {
@@ -24,6 +25,26 @@ const slides = [
     img: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=800&q=80',
   },
 ];
+
+const categoryLabels = {
+  "web-development": "Web Development",
+  "mobile-development": "Mobile Development",
+  design: "Design",
+  writing: "Writing",
+  marketing: "Marketing",
+  "data-science": "Data Science",
+  other: "Other",
+};
+
+const categoryIcons = {
+  "web-development": <FaCode className="text-3xl mb-2 text-emerald-600" />,
+  "mobile-development": <FaMobileAlt className="text-3xl mb-2 text-emerald-600" />,
+  design: <FaPaintBrush className="text-3xl mb-2 text-emerald-600" />,
+  writing: <FaPenNib className="text-3xl mb-2 text-emerald-600" />,
+  marketing: <FaBullhorn className="text-3xl mb-2 text-emerald-600" />,
+  "data-science": <FaChartBar className="text-3xl mb-2 text-emerald-600" />,
+  other: <FaThLarge className="text-3xl mb-2 text-emerald-600" />,
+};
 
 const Home = () => {
   const [current, setCurrent] = useState(0);
@@ -111,6 +132,23 @@ const Home = () => {
             ))}
           </div>
         )}
+      </div>
+
+      {/* Browse by Category Section */}
+      <div className="max-w-6xl mx-auto mb-16 px-4">
+        <h2 className="text-2xl font-bold text-slate-800 mb-6">Browse by Category</h2>
+        <div className="flex flex-wrap gap-6 justify-center">
+          {Object.entries(categoryLabels).map(([key, label]) => (
+            <Link
+              key={key}
+              to={`/browse-tasks#${key}`}
+              className="w-32 h-32 flex flex-col items-center justify-center rounded-xl bg-emerald-100 text-emerald-700 font-semibold hover:bg-emerald-500 hover:text-white transition-colors text-base shadow group"
+            >
+              {categoryIcons[key]}
+              <span className="text-center text-base font-semibold group-hover:text-white transition-colors">{label}</span>
+            </Link>
+          ))}
+        </div>
       </div>
 
       {/* Extra Section 1: How It Works */}

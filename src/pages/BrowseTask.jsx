@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router";
+import React, { useEffect, useState, useRef } from "react";
+import { Link, useLocation } from "react-router";
 
 const categoryLabels = {
   "web-development": "Web Development",
@@ -15,6 +15,8 @@ const BrowseTask = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const location = useLocation();
+  const categoryRefs = useRef({});
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -45,6 +47,19 @@ const BrowseTask = () => {
     return acc;
   }, {});
 
+  // Scroll to category if hash is present
+  useEffect(() => {
+    if (location.hash) {
+      const cat = location.hash.replace('#', '');
+      setTimeout(() => {
+        if (categoryRefs.current[cat]) {
+          const y = categoryRefs.current[cat].getBoundingClientRect().top + window.scrollY - 80; // 80px offset
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+      }, 100); // wait for render
+    }
+  }, [location.hash, tasks]);
+
   return (
     <div className="min-h-[80vh] bg-gradient-to-br from-slate-50 to-emerald-100 p-4">
       <div className="max-w-6xl mx-auto">
@@ -56,7 +71,12 @@ const BrowseTask = () => {
         ) : (
           Object.keys(categoryLabels).map((cat) =>
             tasksByCategory[cat] && tasksByCategory[cat].length > 0 ? (
-              <div key={cat} className="mb-10">
+              <div
+                key={cat}
+                ref={el => (categoryRefs.current[cat] = el)}
+                id={cat}
+                className="mb-10"
+              >
                 <h2 className="text-2xl font-bold text-slate-800 mb-4 border-l-4 border-emerald-500 pl-3">
                   {categoryLabels[cat]}
                 </h2>
