@@ -101,6 +101,9 @@ const TaskDetails = () => {
           <div className="text-center text-slate-500">Task not found.</div>
         ) : (
           <>
+            <div className="mb-2 text-emerald-700 font-semibold text-base text-center">
+              You bid for {task.bidCount ?? 0} opportunities.
+            </div>
             <button
               className="mb-4 text-emerald-600 hover:underline text-sm"
               onClick={() => navigate(-1)}
