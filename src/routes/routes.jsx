@@ -9,7 +9,6 @@ import BrowseTask from "../pages/BrowseTask";
 import PrivateRoute from "../components/PrivateRoute";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
-import TaskDetail from "../pages/TaskDetail";
 import TaskDetails from "../pages/TaskDetails";
 
 const router = createBrowserRouter([
