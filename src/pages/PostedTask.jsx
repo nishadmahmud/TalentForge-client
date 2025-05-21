@@ -41,7 +41,7 @@ const PostedTask = () => {
         }
       } catch (err) {
         setError(err.message);
-        toast.error(err.message || "Failed to fetch tasks");
+        toast.error(err.message || "Failed to fetch tasks", { duration: 2000 });
       } finally {
         setLoading(false);
       }
@@ -74,7 +74,7 @@ const PostedTask = () => {
           prevTasks.filter((task) => task._id !== taskId)
         );
         toast.success("Task deleted successfully!", {
-          duration: 4000,
+          duration: 2000,
           position: "top-center",
           style: {
             background: "#10B981",
@@ -86,7 +86,7 @@ const PostedTask = () => {
       }
     } catch (error) {
       toast.error(error.message || "Failed to delete task.", {
-        duration: 4000,
+        duration: 2000,
         position: "top-center",
         style: {
           background: "#EF4444",
@@ -130,7 +130,7 @@ const PostedTask = () => {
         );
         setShowModal(false);
         toast.success("Task updated successfully!", {
-          duration: 4000,
+          duration: 2000,
           position: "top-center",
           style: {
             background: "#10B981",
@@ -142,7 +142,7 @@ const PostedTask = () => {
       }
     } catch (error) {
       toast.error(error.message || "Failed to update task.", {
-        duration: 4000,
+        duration: 2000,
         position: "top-center",
         style: {
           background: "#EF4444",

@@ -47,7 +47,7 @@ const AddTask = () => {
 
       if (data.success) {
         toast.success("Task created successfully!", {
-          duration: 4000,
+          duration: 2000,
           position: "top-center",
           style: {
             background: "#10B981",
@@ -61,7 +61,7 @@ const AddTask = () => {
     } catch (error) {
       console.error("Error adding task:", error);
       toast.error(error.message || "Failed to create task. Please try again.", {
-        duration: 4000,
+        duration: 2000,
         position: "top-center",
         style: {
           background: "#EF4444",
