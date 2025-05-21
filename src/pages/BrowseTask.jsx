@@ -17,13 +17,14 @@ const BrowseTask = () => {
   const [error, setError] = useState(null);
   const location = useLocation();
   const categoryRefs = useRef({});
+  const Server_Address = import.meta.env.VITE_API_ADDRESS;
 
   useEffect(() => {
     const fetchTasks = async () => {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch("http://localhost:3000/tasks");
+        const res = await fetch(`${Server_Address}/tasks`);
         const data = await res.json();
         if (data.success) {
           setTasks(data.tasks);

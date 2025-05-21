@@ -23,13 +23,15 @@ const PostedTask = () => {
   const [showBidsModal, setShowBidsModal] = useState(false);
   const [bidsTask, setBidsTask] = useState(null);
 
+  const Server_Address = import.meta.env.VITE_API_ADDRESS;
+
   useEffect(() => {
     const fetchTasks = async () => {
       setLoading(true);
       setError(null);
       try {
         const res = await fetch(
-          `http://localhost:3000/my-tasks?email=${encodeURIComponent(
+          `${Server_Address}/my-tasks?email=${encodeURIComponent(
             user?.email
           )}`
         );
@@ -65,7 +67,7 @@ const PostedTask = () => {
     });
     if (!result.isConfirmed) return;
     try {
-      const res = await fetch(`http://localhost:3000/tasks/${taskId}`, {
+      const res = await fetch(`${Server_Address}/tasks/${taskId}`, {
         method: "DELETE",
       });
       const data = await res.json();
@@ -110,7 +112,7 @@ const PostedTask = () => {
     e.preventDefault();
     setUpdating(true);
     try {
-      const res = await fetch(`http://localhost:3000/tasks/${editTask._id}`, {
+      const res = await fetch(`${Server_Address}/${editTask._id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

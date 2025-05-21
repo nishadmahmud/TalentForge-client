@@ -50,6 +50,7 @@ const Home = () => {
   const [current, setCurrent] = useState(0);
   const [featured, setFeatured] = useState([]);
   const [loading, setLoading] = useState(true);
+  const Server_Address = import.meta.env.VITE_API_ADDRESS;
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -62,7 +63,7 @@ const Home = () => {
     const fetchFeatured = async () => {
       setLoading(true);
       try {
-        const res = await fetch('http://localhost:3000/tasks?limit=6&sort=deadline');
+        const res = await fetch(`${Server_Address}/tasks?limit=6&sort=deadline`);
         const data = await res.json();
         if (data.success) setFeatured(data.tasks);
       } catch {}

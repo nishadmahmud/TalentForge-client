@@ -16,6 +16,8 @@ const AddTask = () => {
     category: "",
   });
 
+  const Server_Address = import.meta.env.VITE_API_ADDRESS;
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -36,7 +38,7 @@ const AddTask = () => {
         userId: user?.uid,
       };
 
-      const response = await fetch("http://localhost:3000/tasks", {
+      const response = await fetch(`${Server_Address}/tasks`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -23,13 +23,14 @@ const TaskDetails = () => {
   const [showBidModal, setShowBidModal] = useState(false);
   const [bidForm, setBidForm] = useState({ name: "", email: "", amount: "", message: "" });
   const [bidding, setBidding] = useState(false);
+  const Server_Address = import.meta.env.VITE_API_ADDRESS;
 
   useEffect(() => {
     const fetchTask = async () => {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`http://localhost:3000/tasks/${id}`);
+        const res = await fetch(`${Server_Address}/tasks/${id}`);
         if (!res.ok) throw new Error("Task not found");
         const data = await res.json();
         setTask(data.task || data);
@@ -61,7 +62,7 @@ const TaskDetails = () => {
     e.preventDefault();
     setBidding(true);
     try {
-      const res = await fetch(`http://localhost:3000/tasks/${id}/bid`, {
+      const res = await fetch(`${Server_Address}/tasks/${id}/bid`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(bidForm),
