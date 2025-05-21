@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router";
 
 const categoryLabels = {
   "web-development": "Web Development",
@@ -75,9 +76,9 @@ const BrowseTask = () => {
                         </div>
                       </div>
                       <div className="mt-3 flex justify-end">
-                        <button className="px-4 py-2 rounded-lg bg-emerald-500 text-white font-semibold hover:bg-emerald-600 transition-colors text-sm">
+                        <Link to={`/tasks/${task._id}`} className="px-4 py-2 rounded-lg bg-emerald-500 text-white font-semibold hover:bg-emerald-600 transition-colors text-sm">
                           View Details
-                        </button>
+                        </Link>
                       </div>
                     </div>
                   ))}
