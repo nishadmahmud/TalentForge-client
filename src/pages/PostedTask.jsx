@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../auth/AuthProvider";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
-import { useDarkMode } from '../context/DarkModeContext';
+import { useDarkMode } from "../context/DarkModeContext";
 
 const initialEditState = {
   _id: "",
@@ -33,9 +33,7 @@ const PostedTask = () => {
       setError(null);
       try {
         const res = await fetch(
-          `${Server_Address}/my-tasks?email=${encodeURIComponent(
-            user?.email
-          )}`
+          `${Server_Address}/my-tasks?email=${encodeURIComponent(user?.email)}`
         );
         const data = await res.json();
         if (data.success) {
@@ -66,15 +64,15 @@ const PostedTask = () => {
       confirmButtonColor: "#10B981",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
-      background: isDarkMode ? '#1e293b' : '#ffffff',
-      color: isDarkMode ? '#e2e8f0' : '#1e293b',
+      background: isDarkMode ? "#1e293b" : "#ffffff",
+      color: isDarkMode ? "#e2e8f0" : "#1e293b",
       customClass: {
-        popup: isDarkMode ? 'dark-mode-swal' : '',
-        title: isDarkMode ? 'text-slate-200' : '',
-        content: isDarkMode ? 'text-slate-300' : '',
-        confirmButton: 'bg-emerald-600 hover:bg-emerald-700',
-        cancelButton: 'bg-red-600 hover:bg-red-700'
-      }
+        popup: isDarkMode ? "dark-mode-swal" : "",
+        title: isDarkMode ? "text-slate-200" : "",
+        content: isDarkMode ? "text-slate-300" : "",
+        confirmButton: "bg-emerald-600 hover:bg-emerald-700",
+        cancelButton: "bg-red-600 hover:bg-red-700",
+      },
     });
     if (!result.isConfirmed) return;
     try {
@@ -123,7 +121,7 @@ const PostedTask = () => {
     e.preventDefault();
     setUpdating(true);
     try {
-      const res = await fetch(`${Server_Address}/${editTask._id}`, {
+      const res = await fetch(`${Server_Address}/tasks/${editTask._id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -168,9 +166,27 @@ const PostedTask = () => {
   };
 
   return (
-    <div className={`min-h-[80vh] flex justify-center items-center p-4 ${isDarkMode ? 'bg-slate-900 text-white' : 'bg-gradient-to-br from-slate-50 to-emerald-100 text-slate-900'}`}>
-      <div className={`max-w-5xl w-full rounded-2xl shadow-xl border p-6 sm:p-8 ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-100'}`}>
-        <h1 className={`text-2xl font-bold mb-6 ${isDarkMode ? 'text-emerald-400' : 'text-slate-900'}`}>My Posted Tasks</h1>
+    <div
+      className={`min-h-[80vh] flex justify-center items-center p-4 ${
+        isDarkMode
+          ? "bg-slate-900 text-white"
+          : "bg-gradient-to-br from-slate-50 to-emerald-100 text-slate-900"
+      }`}
+    >
+      <div
+        className={`max-w-5xl w-full rounded-2xl shadow-xl border p-6 sm:p-8 ${
+          isDarkMode
+            ? "bg-slate-800 border-slate-700"
+            : "bg-white border-slate-100"
+        }`}
+      >
+        <h1
+          className={`text-2xl font-bold mb-6 ${
+            isDarkMode ? "text-emerald-400" : "text-slate-900"
+          }`}
+        >
+          My Posted Tasks
+        </h1>
         {loading ? (
           <div className="text-center text-emerald-600 font-semibold">
             Loading...
@@ -183,20 +199,64 @@ const PostedTask = () => {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className={`min-w-full divide-y ${isDarkMode ? 'divide-slate-700' : 'divide-slate-200'}`}>
-              <thead className={isDarkMode ? 'bg-slate-700' : 'bg-slate-50'}>
+            <table
+              className={`min-w-full divide-y ${
+                isDarkMode ? "divide-slate-700" : "divide-slate-200"
+              }`}
+            >
+              <thead className={isDarkMode ? "bg-slate-700" : "bg-slate-50"}>
                 <tr>
-                  <th className={`px-4 py-2 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-slate-300' : 'text-slate-500'}`}>Title</th>
-                  <th className={`px-4 py-2 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-slate-300' : 'text-slate-500'}`}>Category</th>
-                  <th className={`px-4 py-2 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-slate-300' : 'text-slate-500'}`}>Budget</th>
-                  <th className={`px-4 py-2 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-slate-300' : 'text-slate-500'}`}>Deadline</th>
-                  <th className={`px-4 py-2 text-center text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-slate-300' : 'text-slate-500'}`}>Actions</th>
+                  <th
+                    className={`px-4 py-2 text-left text-xs font-medium uppercase tracking-wider ${
+                      isDarkMode ? "text-slate-300" : "text-slate-500"
+                    }`}
+                  >
+                    Title
+                  </th>
+                  <th
+                    className={`px-4 py-2 text-left text-xs font-medium uppercase tracking-wider ${
+                      isDarkMode ? "text-slate-300" : "text-slate-500"
+                    }`}
+                  >
+                    Category
+                  </th>
+                  <th
+                    className={`px-4 py-2 text-left text-xs font-medium uppercase tracking-wider ${
+                      isDarkMode ? "text-slate-300" : "text-slate-500"
+                    }`}
+                  >
+                    Budget
+                  </th>
+                  <th
+                    className={`px-4 py-2 text-left text-xs font-medium uppercase tracking-wider ${
+                      isDarkMode ? "text-slate-300" : "text-slate-500"
+                    }`}
+                  >
+                    Deadline
+                  </th>
+                  <th
+                    className={`px-4 py-2 text-center text-xs font-medium uppercase tracking-wider ${
+                      isDarkMode ? "text-slate-300" : "text-slate-500"
+                    }`}
+                  >
+                    Actions
+                  </th>
                 </tr>
               </thead>
-              <tbody className={`${isDarkMode ? 'bg-slate-800 divide-y divide-slate-700' : 'bg-white divide-y divide-slate-100'}`}>
+              <tbody
+                className={`${
+                  isDarkMode
+                    ? "bg-slate-800 divide-y divide-slate-700"
+                    : "bg-white divide-y divide-slate-100"
+                }`}
+              >
                 {tasks.map((task) => (
                   <tr key={task._id}>
-                    <td className={`px-4 py-3 font-semibold ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>
+                    <td
+                      className={`px-4 py-3 font-semibold ${
+                        isDarkMode ? "text-white" : "text-slate-800"
+                      }`}
+                    >
                       {task.title}
                     </td>
                     <td className="px-4 py-3 text-slate-700">
@@ -238,7 +298,13 @@ const PostedTask = () => {
       {/* Modal for editing task */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
-          <div className={`rounded-xl shadow-lg w-full max-w-lg relative ${isDarkMode ? 'bg-slate-800 border border-slate-700 text-white' : 'bg-white'}`}>
+          <div
+            className={`rounded-xl shadow-lg w-full max-w-lg relative ${
+              isDarkMode
+                ? "bg-slate-800 border border-slate-700 text-white"
+                : "bg-white"
+            }`}
+          >
             <div className="max-h-[90vh] overflow-y-auto">
               <div className="p-6">
                 <button
@@ -248,61 +314,101 @@ const PostedTask = () => {
                 >
                   &times;
                 </button>
-                <h2 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-emerald-400' : 'text-emerald-700'}`}>Update Task</h2>
+                <h2
+                  className={`text-xl font-bold mb-4 ${
+                    isDarkMode ? "text-emerald-400" : "text-emerald-700"
+                  }`}
+                >
+                  Update Task
+                </h2>
                 <form onSubmit={handleEditSubmit} className="space-y-4">
                   {/* User Information - Read Only */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-slate-200' : 'text-slate-700'}`}>User Email</label>
+                      <label
+                        className={`block text-sm font-medium mb-1 ${
+                          isDarkMode ? "text-slate-200" : "text-slate-700"
+                        }`}
+                      >
+                        User Email
+                      </label>
                       <input
                         type="email"
                         value={user?.email || ""}
                         readOnly
                         className={`w-full px-4 py-2 border rounded-lg bg-slate-50 cursor-not-allowed ${
-                          isDarkMode 
-                            ? 'bg-slate-800 border-slate-700 text-white' 
-                            : 'border-slate-200 text-slate-900'
+                          isDarkMode
+                            ? "bg-slate-800 border-slate-700 text-white"
+                            : "border-slate-200 text-slate-900"
                         }`}
                       />
                     </div>
                     <div>
-                      <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-slate-200' : 'text-slate-700'}`}>User Name</label>
+                      <label
+                        className={`block text-sm font-medium mb-1 ${
+                          isDarkMode ? "text-slate-200" : "text-slate-700"
+                        }`}
+                      >
+                        User Name
+                      </label>
                       <input
                         type="text"
                         value={user?.displayName || ""}
                         readOnly
                         className={`w-full px-4 py-2 border rounded-lg bg-slate-50 cursor-not-allowed ${
-                          isDarkMode 
-                            ? 'bg-slate-800 border-slate-700 text-white' 
-                            : 'border-slate-200 text-slate-900'
+                          isDarkMode
+                            ? "bg-slate-800 border-slate-700 text-white"
+                            : "border-slate-200 text-slate-900"
                         }`}
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-slate-200' : 'text-slate-700'}`}>Title</label>
+                    <label
+                      className={`block text-sm font-medium mb-1 ${
+                        isDarkMode ? "text-slate-200" : "text-slate-700"
+                      }`}
+                    >
+                      Title
+                    </label>
                     <input
                       type="text"
                       name="title"
                       value={editTask.title}
                       onChange={handleEditChange}
                       required
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors ${isDarkMode ? 'bg-slate-900 border-slate-700 text-white placeholder-slate-400' : 'bg-white border-slate-200 text-slate-900'}`}
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors ${
+                        isDarkMode
+                          ? "bg-slate-900 border-slate-700 text-white placeholder-slate-400"
+                          : "bg-white border-slate-200 text-slate-900"
+                      }`}
                     />
                   </div>
                   <div>
-                    <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-slate-200' : 'text-slate-700'}`}>Category</label>
+                    <label
+                      className={`block text-sm font-medium mb-1 ${
+                        isDarkMode ? "text-slate-200" : "text-slate-700"
+                      }`}
+                    >
+                      Category
+                    </label>
                     <select
                       name="category"
                       value={editTask.category}
                       onChange={handleEditChange}
                       required
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors ${isDarkMode ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors ${
+                        isDarkMode
+                          ? "bg-slate-900 border-slate-700 text-white"
+                          : "bg-white border-slate-200 text-slate-900"
+                      }`}
                     >
                       <option value="">Select a category</option>
                       <option value="web-development">Web Development</option>
-                      <option value="mobile-development">Mobile Development</option>
+                      <option value="mobile-development">
+                        Mobile Development
+                      </option>
                       <option value="design">Design</option>
                       <option value="writing">Writing</option>
                       <option value="marketing">Marketing</option>
@@ -311,7 +417,13 @@ const PostedTask = () => {
                     </select>
                   </div>
                   <div>
-                    <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-slate-200' : 'text-slate-700'}`}>Budget (USD)</label>
+                    <label
+                      className={`block text-sm font-medium mb-1 ${
+                        isDarkMode ? "text-slate-200" : "text-slate-700"
+                      }`}
+                    >
+                      Budget (USD)
+                    </label>
                     <input
                       type="number"
                       name="budget"
@@ -319,35 +431,63 @@ const PostedTask = () => {
                       onChange={handleEditChange}
                       min="1"
                       required
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors ${isDarkMode ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors ${
+                        isDarkMode
+                          ? "bg-slate-900 border-slate-700 text-white"
+                          : "bg-white border-slate-200 text-slate-900"
+                      }`}
                     />
                   </div>
                   <div>
-                    <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-slate-200' : 'text-slate-700'}`}>Deadline</label>
+                    <label
+                      className={`block text-sm font-medium mb-1 ${
+                        isDarkMode ? "text-slate-200" : "text-slate-700"
+                      }`}
+                    >
+                      Deadline
+                    </label>
                     <input
                       type="date"
                       name="deadline"
                       value={editTask.deadline}
                       onChange={handleEditChange}
                       required
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors ${isDarkMode ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors ${
+                        isDarkMode
+                          ? "bg-slate-900 border-slate-700 text-white"
+                          : "bg-white border-slate-200 text-slate-900"
+                      }`}
                     />
                   </div>
                   <div>
-                    <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-slate-200' : 'text-slate-700'}`}>Description</label>
+                    <label
+                      className={`block text-sm font-medium mb-1 ${
+                        isDarkMode ? "text-slate-200" : "text-slate-700"
+                      }`}
+                    >
+                      Description
+                    </label>
                     <textarea
                       name="description"
                       value={editTask.description}
                       onChange={handleEditChange}
                       rows="3"
                       required
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors ${isDarkMode ? 'bg-slate-900 border-slate-700 text-white placeholder-slate-400' : 'bg-white border-slate-200 text-slate-900'}`}
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors ${
+                        isDarkMode
+                          ? "bg-slate-900 border-slate-700 text-white placeholder-slate-400"
+                          : "bg-white border-slate-200 text-slate-900"
+                      }`}
                     />
                   </div>
                   <div className="flex justify-end gap-2 pt-2">
                     <button
                       type="button"
-                      className={`px-4 py-2 rounded-lg font-semibold transition-colors ${isDarkMode ? 'bg-slate-700 text-white hover:bg-slate-600' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'}`}
+                      className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
+                        isDarkMode
+                          ? "bg-slate-700 text-white hover:bg-slate-600"
+                          : "bg-slate-200 text-slate-700 hover:bg-slate-300"
+                      }`}
                       onClick={() => setShowModal(false)}
                       disabled={updating}
                     >
@@ -355,7 +495,9 @@ const PostedTask = () => {
                     </button>
                     <button
                       type="submit"
-                      className={`px-6 py-2 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700 transition-colors ${updating ? 'opacity-60 cursor-not-allowed' : ''}`}
+                      className={`px-6 py-2 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700 transition-colors ${
+                        updating ? "opacity-60 cursor-not-allowed" : ""
+                      }`}
                       disabled={updating}
                     >
                       {updating ? "Updating..." : "Update"}
@@ -370,7 +512,13 @@ const PostedTask = () => {
       {/* Modal for Bids */}
       {showBidsModal && bidsTask && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
-          <div className={`rounded-xl shadow-lg w-full max-w-md relative ${isDarkMode ? 'bg-slate-800 border border-slate-700 text-white' : 'bg-white'}`}>
+          <div
+            className={`rounded-xl shadow-lg w-full max-w-md relative ${
+              isDarkMode
+                ? "bg-slate-800 border border-slate-700 text-white"
+                : "bg-white"
+            }`}
+          >
             <div className="max-h-[90vh] overflow-y-auto">
               <div className="p-6">
                 <button
@@ -380,8 +528,27 @@ const PostedTask = () => {
                 >
                   &times;
                 </button>
-                <h2 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-emerald-400' : 'text-emerald-700'}`}>Bids for: {bidsTask.title}</h2>
-                <div className={`text-lg mb-2 ${isDarkMode ? 'text-slate-200' : 'text-slate-700'}`}>Total Bids: <span className={`font-bold ${isDarkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>{bidsTask.bidCount ?? 0}</span></div>
+                <h2
+                  className={`text-xl font-bold mb-4 ${
+                    isDarkMode ? "text-emerald-400" : "text-emerald-700"
+                  }`}
+                >
+                  Bids for: {bidsTask.title}
+                </h2>
+                <div
+                  className={`text-lg mb-2 ${
+                    isDarkMode ? "text-slate-200" : "text-slate-700"
+                  }`}
+                >
+                  Total Bids:{" "}
+                  <span
+                    className={`font-bold ${
+                      isDarkMode ? "text-emerald-400" : "text-emerald-600"
+                    }`}
+                  >
+                    {bidsTask.bidCount ?? 0}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
