@@ -4,6 +4,7 @@ import { AuthContext } from "../auth/AuthProvider";
 import { FaUser, FaBars, FaTimes, FaSignOutAlt, FaSun, FaMoon } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDarkMode } from '../context/DarkModeContext';
+import { Tooltip } from 'react-tooltip';
 
 const Navbar = () => {
   const { user, logOut } = useContext(AuthContext);
@@ -72,7 +73,11 @@ const Navbar = () => {
               <div className="flex items-center space-x-3">
 
                 <Link to="/profile" className="focus:outline-none">
-                  <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-emerald-100 shadow-sm hover:border-emerald-200 transition-colors">
+                  <div 
+                    className="w-8 h-8 rounded-full overflow-hidden border-2 border-emerald-100 shadow-sm hover:border-emerald-200 transition-colors"
+                    data-tooltip-id="user-tooltip"
+                    data-tooltip-content={user?.displayName || 'User Profile'}
+                  >
                     {user && user.photoURL ? (
                       <img
                         src={user.photoURL}
@@ -86,6 +91,11 @@ const Navbar = () => {
                     )}
                   </div>
                 </Link>
+                <Tooltip 
+                  id="user-tooltip"
+                  place="bottom"
+                  className={`${isDarkMode ? '!bg-slate-800 !text-slate-200' : '!bg-white !text-slate-800'} !shadow-lg !border !border-slate-200 !rounded-lg !px-3 !py-2 !text-sm`}
+                />
 
                 <button
                   onClick={handleLogOut}

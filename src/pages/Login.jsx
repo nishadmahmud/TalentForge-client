@@ -3,11 +3,14 @@ import { Link, useNavigate, useLocation } from "react-router";
 import { AuthContext } from "../auth/AuthProvider";
 import { motion } from "framer-motion";
 import { useDarkMode } from '../context/DarkModeContext';
+import toast from 'react-hot-toast';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const Login = () => {
   const { signIn, googleSignIn } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -22,10 +25,21 @@ const Login = () => {
     try {
       await signIn(email, password);
       setIsLoading(false);
+      toast.success('Login successful!');
       navigate(from, { replace: true });
     } catch (err) {
       setError(err.message);
       setIsLoading(false);
+      // Friendly error messages
+      let msg = 'Login failed.';
+      if (err.code === 'auth/user-not-found') {
+        msg = 'No account found with this email. Please register first.';
+      } else if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
+        msg = 'Incorrect email or password. Please try again.';
+      } else if (err.code === 'auth/too-many-requests') {
+        msg = 'Too many failed attempts. Please try again later or reset your password.';
+      }
+      toast.error(msg);
     }
   };
 
@@ -35,10 +49,12 @@ const Login = () => {
     try {
       await googleSignIn();
       setIsLoading(false);
+      toast.success('Login successful!');
       navigate(from, { replace: true });
     } catch (err) {
       setError(err.message);
       setIsLoading(false);
+      toast.error(err.message || 'Google login failed.');
     }
   };
 
@@ -59,30 +75,6 @@ const Login = () => {
           </div>
 
           <div className="p-5">
-            {error && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className={`mb-3 p-2 rounded-lg text-sm flex items-center ${isDarkMode ? 'bg-red-900 text-red-200' : 'bg-red-50 text-red-600'}`}
-              >
-                <svg
-                  className="w-5 h-5 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                {error}
-              </motion.div>
-            )}
-
             <form onSubmit={handleSubmit} className="space-y-3">
               <div>
                 <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-slate-200' : 'text-slate-700'}`}>
@@ -121,28 +113,21 @@ const Login = () => {
                 </label>
                 <div className="relative">
                   <input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all duration-200 ${isDarkMode ? 'bg-slate-900 border-slate-700 text-white placeholder-slate-400' : 'bg-white border-slate-200 text-slate-900'}`}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
                   />
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                    <svg
-                      className={`w-5 h-5 ${isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                      />
-                    </svg>
-                  </div>
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-emerald-500 focus:outline-none"
+                    tabIndex={-1}
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
                 </div>
               </div>
 

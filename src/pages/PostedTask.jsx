@@ -66,6 +66,15 @@ const PostedTask = () => {
       confirmButtonColor: "#10B981",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
+      background: isDarkMode ? '#1e293b' : '#ffffff',
+      color: isDarkMode ? '#e2e8f0' : '#1e293b',
+      customClass: {
+        popup: isDarkMode ? 'dark-mode-swal' : '',
+        title: isDarkMode ? 'text-slate-200' : '',
+        content: isDarkMode ? 'text-slate-300' : '',
+        confirmButton: 'bg-emerald-600 hover:bg-emerald-700',
+        cancelButton: 'bg-red-600 hover:bg-red-700'
+      }
     });
     if (!result.isConfirmed) return;
     try {

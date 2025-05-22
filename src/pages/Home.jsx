@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { FaCode, FaMobileAlt, FaPaintBrush, FaPenNib, FaBullhorn, FaChartBar, FaThLarge, FaMoon, FaSun } from 'react-icons/fa';
 import { useDarkMode } from '../context/DarkModeContext';
+import { Typewriter } from 'react-simple-typewriter';
 
 const slides = [
   {
@@ -51,7 +52,7 @@ const Home = () => {
   const [current, setCurrent] = useState(0);
   const [featured, setFeatured] = useState([]);
   const [loading, setLoading] = useState(true);
-  // const { isDarkMode, toggleDarkMode } = useDarkMode();
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
   const Server_Address = import.meta.env.VITE_API_ADDRESS;
 
   // Slider timer effect
@@ -67,9 +68,16 @@ const Home = () => {
     const fetchFeatured = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`${Server_Address}/tasks?limit=6&sort=deadline`);
+        const res = await fetch(`${Server_Address}/tasks?limit=20`); // fetch more to sort/filter
         const data = await res.json();
-        if (data.success) setFeatured(data.tasks);
+        if (data.success) {
+          // Sort by deadline ascending (soonest first)
+          const sorted = data.tasks
+            .filter(task => !!task.deadline)
+            .sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
+            .slice(0, 6);
+          setFeatured(sorted);
+        }
       } catch (error) {
         console.error('Error fetching featured tasks:', error);
       }
@@ -90,7 +98,19 @@ const Home = () => {
             style={{ backgroundImage: `url(${slide.img})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
           >
             <div className="bg-black/50 w-full h-full flex flex-col justify-center items-center p-12 text-center">
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 drop-shadow-lg">{slide.title}</h2>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 drop-shadow-lg">
+                {current === idx ? (
+                  <Typewriter
+                    words={[slide.title]}
+                    loop={false}
+                    cursor
+                    cursorStyle='|'
+                    typeSpeed={60}
+                    deleteSpeed={40}
+                    delaySpeed={1500}
+                  />
+                ) : slide.title}
+              </h2>
               <p className="text-lg md:text-xl text-white mb-6 drop-shadow">{slide.desc}</p>
               <Link to={slide.to} className="inline-block px-6 py-3 rounded-lg bg-emerald-500 text-white font-semibold hover:bg-emerald-600 transition-all text-lg shadow">
                 {slide.cta}
