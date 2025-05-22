@@ -1,6 +1,6 @@
 # TalentForge Freelance Marketplace
 
-**Live Demo:** [https://your-talentforge-demo-url.com](https://your-talentforge-demo-url.com)
+**Live Demo:** [TalentForge](https://talentforg.netlify.app/)
 
 ## 🚀 Key Features
 - Modern freelance marketplace for posting and bidding on tasks
