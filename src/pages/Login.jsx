@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import { Link, useNavigate, useLocation } from "react-router";
 import { AuthContext } from "../auth/AuthProvider";
 import { motion } from "framer-motion";
+import { useDarkMode } from '../context/DarkModeContext';
 
 const Login = () => {
   const { signIn, googleSignIn } = useContext(AuthContext);
@@ -12,6 +13,7 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
+  const { isDarkMode } = useDarkMode();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,15 +43,15 @@ const Login = () => {
   };
 
   return (
-    <div className=" bg-gradient-to-br from-slate-50 to-emerald-100 flex items-center justify-center p-5">
+    <div className={`min-h-screen flex items-center justify-center p-4 ${isDarkMode ? 'bg-slate-900 text-white' : 'bg-gradient-to-br from-slate-50 to-emerald-100 text-slate-900'}`}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="w-full max-w-md"
       >
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-100">
-          <div className="bg-gradient-to-r from-emerald-500 to-teal-600 p-4 text-center">
+        <div className={`rounded-2xl shadow-xl overflow-hidden border ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-100'}`}>
+          <div className={`bg-gradient-to-r p-4 text-center ${isDarkMode ? 'from-emerald-700 to-teal-700' : 'from-emerald-500 to-teal-600'}`}>
             <h2 className="text-2xl font-bold text-white">Sign in to TalentForge</h2>
             <p className="text-emerald-100 mt-1 text-sm">
               Welcome back! Please login to your account
@@ -61,7 +63,7 @@ const Login = () => {
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mb-3 p-2 bg-red-50 text-red-600 rounded-lg text-sm flex items-center"
+                className={`mb-3 p-2 rounded-lg text-sm flex items-center ${isDarkMode ? 'bg-red-900 text-red-200' : 'bg-red-50 text-red-600'}`}
               >
                 <svg
                   className="w-5 h-5 mr-2"
@@ -83,20 +85,20 @@ const Login = () => {
 
             <form onSubmit={handleSubmit} className="space-y-3">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
+                <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-slate-200' : 'text-slate-700'}`}>
                   Email
                 </label>
                 <div className="relative">
                   <input
                     type="email"
-                    className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white transition-all duration-200"
+                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all duration-200 ${isDarkMode ? 'bg-slate-900 border-slate-700 text-white placeholder-slate-400' : 'bg-white border-slate-200 text-slate-900'}`}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
                   />
                   <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                     <svg
-                      className="w-5 h-5 text-slate-400"
+                      className={`w-5 h-5 ${isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -114,20 +116,20 @@ const Login = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
+                <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-slate-200' : 'text-slate-700'}`}>
                   Password
                 </label>
                 <div className="relative">
                   <input
                     type="password"
-                    className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white transition-all duration-200"
+                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all duration-200 ${isDarkMode ? 'bg-slate-900 border-slate-700 text-white placeholder-slate-400' : 'bg-white border-slate-200 text-slate-900'}`}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
                   />
                   <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                     <svg
-                      className="w-5 h-5 text-slate-400"
+                      className={`w-5 h-5 ${isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -187,10 +189,10 @@ const Login = () => {
 
             <div className="relative my-4">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-slate-200"></div>
+                <div className={`w-full border-t ${isDarkMode ? 'border-slate-700' : 'border-slate-200'}`}></div>
               </div>
-              <div className="relative flex justify-center text-xs">
-                <span className="px-2 bg-white text-slate-400">
+              <div className={`relative flex justify-center text-xs`}>
+                <span className={`px-2 ${isDarkMode ? 'bg-slate-800 text-slate-400' : 'bg-white text-slate-400'}`}>
                   Or continue with
                 </span>
               </div>
@@ -201,17 +203,17 @@ const Login = () => {
               whileTap={{ scale: 0.98 }}
               onClick={handleGoogle}
               disabled={isLoading}
-              className="w-full py-2 px-4 border border-slate-200 rounded-lg hover:bg-slate-50 flex items-center justify-center gap-3 shadow-sm transition-all duration-200"
+              className={`w-full py-2 px-4 border rounded-lg flex items-center justify-center gap-3 shadow-sm transition-all duration-200 ${isDarkMode ? 'border-slate-700 bg-slate-900 hover:bg-slate-800' : 'border-slate-200 hover:bg-slate-50 bg-white'}`}
             >
               <img
                 src="https://www.svgrepo.com/show/475656/google-color.svg"
                 alt="Google"
                 className="w-5 h-5"
               />
-              <span className="text-slate-700 font-medium">Google</span>
+              <span className={`${isDarkMode ? 'text-white' : 'text-slate-700'} font-medium`}>Google</span>
             </motion.button>
 
-            <p className="mt-4 text-center text-xs text-slate-600">
+            <p className={`mt-4 text-center text-xs ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
               Don't have an account?{" "}
               <Link
                 to="/register"

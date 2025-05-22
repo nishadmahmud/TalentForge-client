@@ -1,13 +1,15 @@
 import { Link, useLocation } from "react-router";
 import { useContext, useState } from "react";
 import { AuthContext } from "../auth/AuthProvider";
-import { FaUser, FaBars, FaTimes, FaSignOutAlt } from "react-icons/fa";
+import { FaUser, FaBars, FaTimes, FaSignOutAlt, FaSun, FaMoon } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
+import { useDarkMode } from '../context/DarkModeContext';
 
 const Navbar = () => {
   const { user, logOut } = useContext(AuthContext);
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
 
   const handleLogOut = () => {
     logOut()
@@ -23,7 +25,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-slate-100">
+    <nav className={`backdrop-blur-md shadow-sm sticky top-0 z-50 border-b ${isDarkMode ? 'bg-slate-900/90 border-slate-700' : 'bg-white/90 border-slate-100'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -46,12 +48,11 @@ const Navbar = () => {
               <Link
                 key={link.to}
                 to={link.to}
-                className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 relative
-                  ${
-                    location.pathname === link.to
-                      ? "text-emerald-600"
-                      : "text-slate-700 hover:text-emerald-600"
-                  }`}
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 relative ${
+                  location.pathname === link.to
+                    ? isDarkMode ? 'text-emerald-400' : 'text-emerald-600'
+                    : isDarkMode ? 'text-slate-200 hover:text-emerald-400' : 'text-slate-700 hover:text-emerald-600'
+                }`}
               >
                 {link.label}
                 {location.pathname === link.to && (
@@ -112,16 +113,35 @@ const Navbar = () => {
               </div>
             )}
 
+            {/* Modern Switch-Style Dark Mode Toggle */}
+            <button
+              onClick={toggleDarkMode}
+              aria-label="Toggle dark mode"
+              type="button"
+              className={`w-10 h-6 flex items-center rounded-full border-2 transition-colors duration-300 relative ${isDarkMode ? 'bg-slate-800 border-emerald-400' : 'bg-white border-slate-200'}`}
+            >
+              <span
+                className={`w-5 h-5 flex items-center justify-center rounded-full shadow absolute top-0 transition-all duration-300 ${isDarkMode ? 'translate-x-4 bg-slate-900' : 'translate-x-0 bg-yellow-400'}`}
+                style={{ left: 0 }}
+              >
+                {isDarkMode ? (
+                  <FaMoon className="text-white text-sm transition-all duration-300" />
+                ) : (
+                  <FaSun className="text-yellow-600 text-sm transition-all duration-300" />
+                )}
+              </span>
+            </button>
+
             {/* Mobile menu button */}
             <button
-              className="md:hidden ml-2 p-2 rounded-md hover:bg-slate-100 focus:outline-none transition-colors"
+              className={`md:hidden ml-2 p-2 rounded-md focus:outline-none transition-colors ${isDarkMode ? 'hover:bg-slate-800' : 'hover:bg-slate-100'}`}
               onClick={() => setMenuOpen(!menuOpen)}
               aria-label="Toggle menu"
             >
               {menuOpen ? (
-                <FaTimes className="h-5 w-5 text-slate-700" />
+                <FaTimes className={`h-5 w-5 ${isDarkMode ? 'text-slate-200' : 'text-slate-700'}`} />
               ) : (
-                <FaBars className="h-5 w-5 text-slate-700" />
+                <FaBars className={`h-5 w-5 ${isDarkMode ? 'text-slate-200' : 'text-slate-700'}`} />
               )}
             </button>
           </div>
@@ -137,19 +157,18 @@ const Navbar = () => {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2 }}
-            className="md:hidden overflow-hidden bg-white shadow-lg"
+            className={`md:hidden overflow-hidden shadow-lg ${isDarkMode ? 'bg-slate-900' : 'bg-white'}`}
           >
             <div className="px-4 pt-2 pb-4 space-y-1">
               {navLinks.map((link) => (
                 <Link
                   key={link.to}
                   to={link.to}
-                  className={`block px-3 py-2 rounded-md text-base font-medium transition-colors
-                    ${
-                      location.pathname === link.to
-                        ? "bg-emerald-50 text-emerald-600"
-                        : "text-slate-700 hover:bg-slate-50"
-                    }`}
+                  className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                    location.pathname === link.to
+                      ? isDarkMode ? 'bg-emerald-900 text-emerald-400' : 'bg-emerald-50 text-emerald-600'
+                      : isDarkMode ? 'text-slate-200 hover:bg-slate-800' : 'text-slate-700 hover:bg-slate-50'
+                  }`}
                   onClick={() => setMenuOpen(false)}
                 >
                   {link.label}
@@ -159,7 +178,7 @@ const Navbar = () => {
                 <>
                   <Link
                     to="/profile"
-                    className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                    className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${isDarkMode ? 'text-slate-200 hover:bg-slate-800' : 'text-slate-700 hover:bg-slate-50'}`}
                     onClick={() => setMenuOpen(false)}
                   >
                     Your Profile
@@ -169,7 +188,7 @@ const Navbar = () => {
                       handleLogOut();
                       setMenuOpen(false);
                     }}
-                    className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 hover:bg-red-50 transition-colors"
+                    className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium transition-colors ${isDarkMode ? 'text-red-400 hover:bg-red-900' : 'text-red-600 hover:bg-red-50'}`}
                   >
                     Sign out
                   </button>
@@ -178,14 +197,14 @@ const Navbar = () => {
                 <div className="pt-2 border-t border-slate-100">
                   <Link
                     to="/login"
-                    className="block w-full px-4 py-2 text-center text-base font-medium text-emerald-600 hover:bg-emerald-50 rounded-md transition-colors"
+                    className={`block w-full px-4 py-2 text-center text-base font-medium rounded-md transition-colors ${isDarkMode ? 'text-emerald-400 hover:bg-slate-800' : 'text-emerald-600 hover:bg-emerald-50'}`}
                     onClick={() => setMenuOpen(false)}
                   >
                     Sign in
                   </Link>
                   <Link
                     to="/register"
-                    className="block w-full px-4 py-2 mt-2 text-center text-base font-medium text-white bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 rounded-md shadow-sm transition-all"
+                    className={`block w-full px-4 py-2 mt-2 text-center text-base font-medium rounded-md shadow-sm transition-all ${isDarkMode ? 'text-white bg-gradient-to-r from-emerald-700 to-teal-700 hover:from-emerald-800 hover:to-teal-800' : 'text-white bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600'}`}
                     onClick={() => setMenuOpen(false)}
                   >
                     Get started

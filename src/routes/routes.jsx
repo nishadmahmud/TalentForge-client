@@ -14,29 +14,29 @@ import TaskDetails from "../pages/TaskDetails";
 const router = createBrowserRouter([
   {
     path: "/",
-    Component: MainLayout,
+    element: <MainLayout />,
     children: [
       {
         index: true,
-        Component: Home,
+        element: <Home />,
       },
       {
         path: "browse-tasks",
-        Component: BrowseTask,
+        element: <BrowseTask />,
       },
       {
         path: "login",
-        Component: Login,
+        element: <Login />,
       },
       {
         path: "register",
-        Component: Register,
+        element: <Register />,
       },
       {
         path: "profile",
         element: (
           <PrivateRoute>
-            <Profile></Profile>
+            <Profile />
           </PrivateRoute>
         ),
       },
@@ -44,7 +44,7 @@ const router = createBrowserRouter([
         path: "tasks/:id",
         element: (
           <PrivateRoute>
-            <TaskDetails></TaskDetails>
+            <TaskDetails />
           </PrivateRoute>
         ),
       },
@@ -52,7 +52,7 @@ const router = createBrowserRouter([
         path: "add-task",
         element: (
           <PrivateRoute>
-            <AddTask></AddTask>
+            <AddTask />
           </PrivateRoute>
         ),
       },
@@ -60,7 +60,7 @@ const router = createBrowserRouter([
         path: "my-tasks",
         element: (
           <PrivateRoute>
-            <PostedTask></PostedTask>
+            <PostedTask />
           </PrivateRoute>
         ),
       },
@@ -68,7 +68,7 @@ const router = createBrowserRouter([
   },
   {
     path: "*",
-    Component: NotFound,
+    element: <NotFound />,
   },
 ]);
 
