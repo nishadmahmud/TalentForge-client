@@ -2,6 +2,8 @@
 
 **Live Demo:** [TalentForge](https://talentforg.netlify.app/)
 
+**Server Repo:** [Backend](https://github.com/nishadmahmud/TalentForge-Server)
+
 ## 🚀 Key Features
 - Modern freelance marketplace for posting and bidding on tasks
 - User authentication (register, login, Google sign-in)
