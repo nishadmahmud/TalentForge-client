@@ -10,9 +10,11 @@ import {
   FaThLarge,
   FaMoon,
   FaSun,
+  FaEnvelope,
 } from "react-icons/fa";
 import { useDarkMode } from "../context/DarkModeContext";
 import { Typewriter } from "react-simple-typewriter";
+import toast from "react-hot-toast";
 
 const slides = [
   {
@@ -64,8 +66,18 @@ const Home = () => {
   const [current, setCurrent] = useState(0);
   const [featured, setFeatured] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { isDarkMode, toggleDarkMode } = useDarkMode();
+  const [email, setEmail] = useState("");
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const { isDarkMode } = useDarkMode();
   const Server_Address = import.meta.env.VITE_API_ADDRESS;
+
+  // Check if user is already subscribed
+  useEffect(() => {
+    const subscribed = localStorage.getItem("newsletterSubscribed");
+    if (subscribed) {
+      setIsSubscribed(true);
+    }
+  }, []);
 
   // Slider timer effect
   useEffect(() => {
@@ -87,7 +99,7 @@ const Home = () => {
           const sorted = data.tasks
             .filter((task) => !!task.deadline)
             .sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
-            .slice(0, 6);
+            .slice(0, 8); // Show 8 cards
           setFeatured(sorted);
         }
       } catch (error) {
@@ -97,6 +109,29 @@ const Home = () => {
     };
     fetchFeatured();
   }, [Server_Address]);
+
+  const handleNewsletterSubmit = (e) => {
+    e.preventDefault();
+    if (isSubscribed) {
+      toast.success("You're already subscribed to our newsletter!");
+      return;
+    }
+    
+    if (email.trim()) {
+      localStorage.setItem("newsletterSubscribed", "true");
+      setIsSubscribed(true);
+      toast.success("Thank you for subscribing to our newsletter!");
+      setEmail("");
+    } else {
+      toast.error("Please enter a valid email address");
+    }
+  };
+
+  const handleUnsubscribe = () => {
+    localStorage.removeItem("newsletterSubscribed");
+    setIsSubscribed(false);
+    toast.success("You have been unsubscribed from our newsletter!");
+  };
 
   return (
     <div
@@ -108,7 +143,7 @@ const Home = () => {
     >
       <div className="h-10" />
       {/* Slider */}
-      <div className="relative w-full max-w-5xl mx-auto rounded-2xl overflow-hidden shadow-xl h-80">
+      <div className="relative w-full max-w-5xl mx-auto rounded-2xl overflow-hidden shadow-xl" style={{ height: '70vh', minHeight: 320 }}>
         {slides.map((slide, idx) => (
           <div
             key={idx}
@@ -190,27 +225,27 @@ const Home = () => {
             No featured tasks found.
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {featured.map((task) => (
               <div
                 key={task._id}
-                className={`rounded-xl shadow-lg p-6 flex flex-col justify-between hover:shadow-xl transition-all duration-300 ${
+                className={`rounded-xl shadow-lg p-4 flex flex-col justify-between hover:shadow-xl transition-all duration-300 ${
                   isDarkMode
                     ? "bg-slate-800 border-slate-700 hover:bg-slate-750"
                     : "bg-white border-slate-100 hover:bg-slate-50"
                 } border`}
               >
                 <div className="space-y-4">
-                  <div className="flex items-start justify-between">
+                  <div>
                     <div
-                      className={`text-lg font-bold mb-1 line-clamp-1 ${
+                      className={`text-lg font-bold mb-0.5 line-clamp-1 ${
                         isDarkMode ? "text-emerald-400" : "text-emerald-700"
                       }`}
                     >
                       {task.title}
                     </div>
                     <div
-                      className={`px-2 py-1 rounded-full text-xs font-medium shrink-0 ml-2 ${
+                      className={`px-1.5 py-0.5 rounded-full text-xs font-medium inline-block mb-1 ${
                         isDarkMode
                           ? "bg-emerald-900/50 text-emerald-300"
                           : "bg-emerald-100 text-emerald-700"
@@ -221,7 +256,7 @@ const Home = () => {
                   </div>
 
                   <div
-                    className={`text-sm leading-relaxed line-clamp-1 ${
+                    className={`text-sm leading-relaxed line-clamp-1 mb-1 ${
                       isDarkMode ? "text-slate-300" : "text-slate-600"
                     }`}
                   >
@@ -229,17 +264,17 @@ const Home = () => {
                   </div>
 
                   <div
-                    className={`pt-3 border-t ${
+                    className={`pt-2 border-t ${
                       isDarkMode ? "border-slate-700" : "border-slate-200"
                     }`}
                   >
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-2 gap-2">
                       <div
                         className={`flex flex-col ${
                           isDarkMode ? "text-slate-400" : "text-slate-500"
                         }`}
                       >
-                        <span className="text-xs font-medium mb-1">Budget</span>
+                        <span className="text-xs font-medium mb-0.5">Budget</span>
                         <span
                           className={`font-semibold ${
                             isDarkMode ? "text-emerald-400" : "text-emerald-600"
@@ -253,7 +288,7 @@ const Home = () => {
                           isDarkMode ? "text-slate-400" : "text-slate-500"
                         }`}
                       >
-                        <span className="text-xs font-medium mb-1">
+                        <span className="text-xs font-medium mb-0.5">
                           Deadline
                         </span>
                         <span className="font-medium">{task.deadline}</span>
@@ -261,7 +296,7 @@ const Home = () => {
                     </div>
 
                     <div
-                      className={`mt-3 flex items-center justify-between pt-3 border-t ${
+                      className={`mt-2 flex items-center justify-between pt-2 border-t ${
                         isDarkMode ? "border-slate-700" : "border-slate-200"
                       }`}
                     >
@@ -289,7 +324,7 @@ const Home = () => {
                       </div>
                       <Link
                         to={`/tasks/${task._id}`}
-                        className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-300 ${
+                        className={`px-3 py-1.5 rounded-lg font-semibold text-sm transition-all duration-300 ${
                           isDarkMode
                             ? "bg-emerald-600 text-white hover:bg-emerald-500"
                             : "bg-emerald-500 text-white hover:bg-emerald-600"
@@ -459,7 +494,7 @@ const Home = () => {
               </span>
               <h3
                 className={`font-semibold text-lg mb-2 ${
-                  isDarkMode ? "text-slate-200" : ""
+                  isDarkMode ? "text-slate-200" : "text-slate-800"
                 }`}
               >
                 Secure Payments
@@ -483,7 +518,7 @@ const Home = () => {
               </span>
               <h3
                 className={`font-semibold text-lg mb-2 ${
-                  isDarkMode ? "text-slate-200" : ""
+                  isDarkMode ? "text-slate-200" : "text-slate-800"
                 }`}
               >
                 Quality Freelancers
@@ -507,7 +542,7 @@ const Home = () => {
               </span>
               <h3
                 className={`font-semibold text-lg mb-2 ${
-                  isDarkMode ? "text-slate-200" : ""
+                  isDarkMode ? "text-slate-200" : "text-slate-800"
                 }`}
               >
                 24/7 Support
@@ -517,6 +552,73 @@ const Home = () => {
               </p>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Newsletter Section */}
+      <div className={`py-12 ${isDarkMode ? "bg-slate-900" : "bg-white"}`}>
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full mb-6 ${
+            isDarkMode ? "bg-emerald-900" : "bg-emerald-100"
+          }`}>
+            <FaEnvelope className={`text-2xl ${isDarkMode ? "text-emerald-400" : "text-emerald-600"}`} />
+          </div>
+          <h2 className={`text-3xl font-bold mb-4 ${
+            isDarkMode ? "text-white" : "text-slate-900"
+          }`}>
+            Stay Updated
+          </h2>
+          <p className={`text-lg mb-8 ${
+            isDarkMode ? "text-slate-300" : "text-slate-600"
+          }`}>
+            Get the latest updates on new features, tips, and opportunities delivered to your inbox.
+          </p>
+          
+          {isSubscribed ? (
+            <div className="space-y-4">
+              <div className={`inline-flex items-center px-6 py-3 rounded-lg ${
+                isDarkMode ? "bg-emerald-900 text-emerald-400" : "bg-emerald-100 text-emerald-700"
+              }`}>
+                <FaEnvelope className="mr-2" />
+                <span className="font-semibold">Already Subscribed!</span>
+              </div>
+              <div className="flex justify-center">
+                <button
+                  onClick={handleUnsubscribe}
+                  className={`px-6 py-2 rounded-lg font-semibold transition-colors ${
+                    isDarkMode 
+                      ? "bg-red-600 text-white hover:bg-red-700" 
+                      : "bg-red-500 text-white hover:bg-red-600"
+                  }`}
+                >
+                  Unsubscribe
+                </button>
+              </div>
+            </div>
+          ) : (
+            <form onSubmit={handleNewsletterSubmit} className="max-w-md mx-auto">
+              <div className="flex rounded-lg overflow-hidden shadow-lg">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email"
+                  className={`flex-1 px-4 py-3 focus:outline-none ${
+                    isDarkMode 
+                      ? "bg-slate-800 text-white placeholder-slate-400 border-slate-700" 
+                      : "bg-white text-slate-900 placeholder-slate-500 border-slate-200"
+                  } border`}
+                  required
+                />
+                <button
+                  type="submit"
+                  className="px-6 py-3 bg-emerald-600 text-white font-semibold hover:bg-emerald-700 transition-colors"
+                >
+                  Subscribe
+                </button>
+              </div>
+            </form>
+          )}
         </div>
       </div>
     </div>

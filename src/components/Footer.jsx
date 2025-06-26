@@ -112,14 +112,14 @@ const Footer = () => {
                 </li>
                 <li>
                   <Link
-                    to="/terms"
+                    to="/faq"
                     className={`transition-colors ${
                       isDarkMode
                         ? "text-slate-400 hover:text-emerald-400"
                         : "text-slate-500 hover:text-emerald-600"
                     }`}
                   >
-                    Terms & Conditions
+                    FAQ
                   </Link>
                 </li>
               </ul>
@@ -142,7 +142,7 @@ const Footer = () => {
                   <span
                     className={isDarkMode ? "text-slate-200" : "text-slate-700"}
                   >
-                    support@talentforge.com
+                    mahmudnishad253@gmail.com
                   </span>
                 </li>
                 <li>
@@ -150,7 +150,7 @@ const Footer = () => {
                   <span
                     className={isDarkMode ? "text-slate-200" : "text-slate-700"}
                   >
-                    +1 234 567 890
+                    +8801622064993
                   </span>
                 </li>
                 <li>
@@ -158,7 +158,7 @@ const Footer = () => {
                   <span
                     className={isDarkMode ? "text-slate-200" : "text-slate-700"}
                   >
-                    123 Freelance Street, Digital City
+                    Sylhet Sadar 3100, Sylhet, Bangladesh
                   </span>
                 </li>
               </ul>
@@ -221,33 +221,6 @@ const Footer = () => {
                   <FaLinkedin className="h-6 w-6" />
                 </a>
               </div>
-              <form
-                className={`flex rounded-lg overflow-hidden border ${
-                  isDarkMode
-                    ? "border-slate-700 bg-slate-900"
-                    : "border-slate-200 bg-slate-50"
-                }`}
-              >
-                <input
-                  type="email"
-                  placeholder="Your email"
-                  className={`flex-1 px-3 py-2 bg-transparent focus:outline-none ${
-                    isDarkMode
-                      ? "text-white placeholder-slate-400"
-                      : "text-slate-700"
-                  }`}
-                />
-                <button
-                  type="submit"
-                  className={`px-4 py-2 font-semibold transition-colors ${
-                    isDarkMode
-                      ? "bg-emerald-700 text-white hover:bg-emerald-800"
-                      : "bg-emerald-600 text-white hover:bg-emerald-700"
-                  }`}
-                >
-                  Subscribe
-                </button>
-              </form>
             </div>
           </div>
           <div

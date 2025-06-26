@@ -10,6 +10,9 @@ import PrivateRoute from "../components/PrivateRoute";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import TaskDetails from "../pages/TaskDetails";
+import About from "../pages/About";
+import Contact from "../pages/Contact";
+import FAQ from "../pages/FAQ";
 
 const router = createBrowserRouter([
   {
@@ -63,6 +66,18 @@ const router = createBrowserRouter([
             <PostedTask />
           </PrivateRoute>
         ),
+      },
+      {
+        path: "about",
+        element: <About />,
+      },
+      {
+        path: "contact",
+        element: <Contact />,
+      },
+      {
+        path: "faq",
+        element: <FAQ />,
       },
     ],
   },
